@@ -8,17 +8,16 @@ namespace DomainLayer
 {
     class BatteryManufacturer
     {
-        private int id;
-        private string name;
+        public int ID { get; set; }
+        public string Name { get; set; }
 
         public BatteryManufacturer (int id, string name)
         {
-            this.id = id;
-            this.name = name;
+            ID = id;
+            Name = name;
         }
 
-        public int ID { get; set; }
 
-        public string Name { get; set; }
+        
     }
 }
