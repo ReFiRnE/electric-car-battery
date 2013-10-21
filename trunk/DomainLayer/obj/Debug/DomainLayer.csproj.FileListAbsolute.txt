@@ -3,8 +3,3 @@ C:\Users\Cristina\Documents\Visual Studio 2012\Projects\CarBattery\DomainLayer\b
 C:\Users\Cristina\Documents\Visual Studio 2012\Projects\CarBattery\DomainLayer\obj\Debug\DomainLayer.csprojResolveAssemblyReference.cache
 C:\Users\Cristina\Documents\Visual Studio 2012\Projects\CarBattery\DomainLayer\obj\Debug\DomainLayer.dll
 C:\Users\Cristina\Documents\Visual Studio 2012\Projects\CarBattery\DomainLayer\obj\Debug\DomainLayer.pdb
-C:\Users\Nikola\Documents\vs2012\ec\src\DomainLayer\obj\Debug\DomainLayer.dll
-C:\Users\Nikola\Documents\vs2012\ec\src\DomainLayer\obj\Debug\DomainLayer.pdb
-C:\Users\Nikola\Documents\vs2012\ec\src\DomainLayer\bin\Debug\DomainLayer.dll
-C:\Users\Nikola\Documents\vs2012\ec\src\DomainLayer\bin\Debug\DomainLayer.pdb
-C:\Users\Nikola\Documents\vs2012\ec\src\DomainLayer\obj\Debug\DomainLayer.csprojResolveAssemblyReference.cache

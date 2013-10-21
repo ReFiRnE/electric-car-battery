@@ -47,7 +47,6 @@
     <Compile Include="Booking.cs" />
     <Compile Include="Car.cs" />
     <Compile Include="Customer.cs" />
-    <Compile Include="Edge.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
