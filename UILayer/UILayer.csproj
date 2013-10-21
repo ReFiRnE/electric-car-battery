@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{791FB9F5-762A-450D-865F-8C0C6018B8FB}</ProjectGuid>
+    <ProjectGuid>{B51C6E3A-F236-4BD1-BCC0-13A1500B5E69}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DomainLayer</RootNamespace>
-    <AssemblyName>DomainLayer</AssemblyName>
+    <RootNamespace>UILayer</RootNamespace>
+    <AssemblyName>UILayer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,16 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatteryCarHistory.cs" />
-    <Compile Include="BatteryItem.cs" />
-    <Compile Include="BatteryManufacturer.cs" />
-    <Compile Include="BatteryModel.cs" />
-    <Compile Include="BatteryStation.cs" />
-    <Compile Include="Booking.cs" />
-    <Compile Include="Car.cs" />
-    <Compile Include="Customer.cs" />
-    <Compile Include="Edge.cs" />
-    <Compile Include="Graph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
