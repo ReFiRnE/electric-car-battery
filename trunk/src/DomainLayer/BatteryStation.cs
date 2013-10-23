@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,31 +7,32 @@ namespace DomainLayer
 {
     public class BatteryStation
     {
-        // what we need for the battery station itself
-        private int stationID { get; set; }
-        private string name { get; set; }
-        private DateTime timeOpen { get; set; }
-        private DateTime timeClose { get; set; }
+        public int StationID { get; set; }
+        public string Name { get; set; }
+        public DateTime TimeOpen { get; set; }
+        public DateTime TimeClose { get; set; }
 
-        // what we need for the graph + the name
-        private bool mark { get; set; }
-        private IList<Edge> edges;
+        public bool Mark { get; set; }
+        IList<Edge> edges;
 
-        public BatteryStation(int stationID, string name, DateTime timeOpen, DateTime timeClose)
+        public BatteryStation(int StationID, string Name, DateTime TimeOpen, DateTime TimeClose)
         {
-            this.stationID = stationID;
-            this.name = name;
-            this.timeOpen = timeOpen;
-            this.timeClose = timeClose;
+            this.StationID = StationID;
+            this.Name = Name;
+            this.TimeOpen = TimeOpen;
+            this.TimeClose = TimeClose;
 
-            mark = false;
+            Mark = false;
             edges = new List<Edge>();
         }
 
-        public void AddEdge(BatteryStation station)
+        public void AddEdge(BatteryStation station, double distance, bool twoWay)
         {
-            Edge newEdge = new Edge(this, station);
+            Edge newEdge = new Edge(this, station, distance);
             edges.Add(newEdge);
+
+            if (twoWay)
+                station.AddEdge(this, distance, false);
         }
 
         public int OutDegree()
@@ -46,8 +46,8 @@ namespace DomainLayer
         }
 
         public IList<Edge> EdgeList()
-        { 
-            return edges; 
+        {
+            return edges;
         }
     }
 }

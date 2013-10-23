@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace DomainLayer
 {
-    class Graph
+    public class Graph
     {
         private IList<BatteryStation> stations;
 
         public Graph()
         {
             stations = new List<BatteryStation>();
+        }
+
+        public IList<BatteryStation> GetStations()
+        {
+            return stations;
         }
 
         public bool IsEmpty()
@@ -27,13 +32,13 @@ namespace DomainLayer
                 stations.Add(station);
         }
 
-        public void AddEdge(BatteryStation from, BatteryStation to)
+        public void AddEdge(BatteryStation from, BatteryStation to, double distance, bool twoWay)
         {
             if (FindEdge(from, to) == null)
-                from.AddEdge(to);
+                from.AddEdge(to, distance, twoWay);
         }
 
-        public bool ContainsVertex(BatteryStation station)
+        public bool ContainsStation(BatteryStation station)
         {
             return stations.Contains(station);
         }
@@ -43,9 +48,24 @@ namespace DomainLayer
             return (FindEdge(startStation, endStation) != null);
         }
 
+        public IEnumerator<BatteryStation> BatteryStations()
+        {
+            return stations.GetEnumerator();
+        }
+
+        public IList<Edge> GetAllEdges()
+        {
+            List<Edge> edgeList = new List<Edge>();
+
+            foreach (BatteryStation bs in stations)
+                edgeList.AddRange(bs.EdgeList());
+
+            return edgeList;
+        }
+
         public IList<BatteryStation> GetAdjacencies(BatteryStation station)
         {
-            List<BatteryStation> adjStations = new List<BatteryStation>();
+            IList<BatteryStation> adjStations = new List<BatteryStation>();
             IEnumerator ien = station.EdgeList().GetEnumerator();
 
             while (ien.MoveNext())
@@ -57,12 +77,7 @@ namespace DomainLayer
             return adjStations;
         }
 
-        public IEnumerator<BatteryStation> BatteryStations()
-        {
-            return stations.GetEnumerator();
-        }
-
-        public int GetNoOfVertices()
+        public int GetNoOfStations()
         {
             return stations.Count();
         }
@@ -82,64 +97,127 @@ namespace DomainLayer
             stations.Clear();
         }
 
-        public void RemoveEdge(BatteryStation from, BatteryStation to)
-        {
-            Edge e = FindEdge(from, to);
-
-            if (e != null)
-                e.From.RemoveEdge(e);
-        }
-
-
-        public void RemoveBatteryStation(BatteryStation station)
-        {
-            stations.Remove(station);
-
-            IEnumerator ien = stations.GetEnumerator();
-
-            while (ien.MoveNext())
-            {
-                BatteryStation bs = (BatteryStation)ien.Current;
-                IList<Edge> stationEdges = bs.EdgeList();
-
-                for (int i = 0; i < stationEdges.Count; i++)
-                {
-                    Edge e = stationEdges[i];
-
-                    if (e.To.Equals(station))
-                        stationEdges.Remove(e);
-                }
-            }
-        }
-
         public Edge FindEdge(BatteryStation from, BatteryStation to)
         {
             Edge edge = null;
-            IEnumerator ienum = from.EdgeList().GetEnumerator();
 
-            while ((edge != null) && ienum.MoveNext())
+            foreach (Edge e in from.EdgeList())
             {
-                if (ienum.Current.Equals(to))
-                    edge = (Edge)ienum.Current;
+                if (e.To.Equals(to))
+                    edge = e;
             }
 
             return edge;
         }
 
+        public void RemoveEdge(BatteryStation from, BatteryStation to)
+        {
+            Edge e_from = FindEdge(from, to);
+            Edge e_to = FindEdge(to, from);
+
+            if (e_from != null)
+                e_from.From.RemoveEdge(e_from);
+
+            if (e_to != null)
+                e_to.From.RemoveEdge(e_to);
+        }
+
+        public void RemoveBatteryStation(BatteryStation station)
+        {
+            stations.Remove(station);
+
+            IList<BatteryStation> adjList = GetAdjacencies(station);
+
+            foreach (BatteryStation bs_adj in adjList)
+                RemoveEdge(station, bs_adj);
+        }
+
         #region Traversing
-        public void Bfs(BatteryStation v)
+        public void BreathFirstSearch(BatteryStation v)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Dfs(BatteryStation v)
+        public IList DepthFirstSearch(BatteryStation st)
         {
-            throw new System.NotImplementedException();
+            UnmarkAll();
+
+            IList l = new ArrayList();
+            Stack<BatteryStation> s = new Stack<BatteryStation>();
+
+            s.Push(st);
+            l.Add(st);
+            st.Mark = true;
+
+            while (s.Count != 0)
+            {
+                BatteryStation n = GetNextUnMarked(GetAdjacencies(s.Peek()));
+
+                if (n != null)
+                {
+                    n.Mark = true;
+                    l.Add(n);
+                    s.Push(n);
+                }
+                else
+                {
+                    s.Pop();
+                }
+            }
+
+            return l;
         }
 
-        public void Unmark()
+        public IList BreadthFirstSearch(BatteryStation s)
         {
-            throw new System.NotImplementedException();
+            UnmarkAll();
+
+            IList l = new ArrayList();
+            Queue<BatteryStation> q = new Queue<BatteryStation>();
+
+            q.Enqueue(s);
+            l.Add(s);
+            s.Mark = true;
+
+            while (q.Count > 0)
+            {
+                BatteryStation n = q.Dequeue();
+                BatteryStation c = null;
+
+                while ((c = GetNextUnMarked(GetAdjacencies(n))) != null)
+                {
+                    c.Mark = true;
+                    q.Enqueue(c);
+                    l.Add(c);
+                }
+            }
+
+            return l;
+        }
+
+        private BatteryStation GetNextUnMarked(IList<BatteryStation> list)
+        {
+            bool found = false;
+            int i = 0;
+            BatteryStation bs = null;
+
+            while (!found && i < list.Count)
+            {
+                bs = list[i];
+
+                if (!bs.Mark)
+                    found = true;
+
+                i++;
+            }
+
+            return found ? bs : null;
+        }
+
+        public void UnmarkAll()
+        {
+            foreach (BatteryStation bs in stations)
+                bs.Mark = false;
         }
         #endregion
     }
